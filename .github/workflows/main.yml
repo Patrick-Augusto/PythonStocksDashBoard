@@ -47,14 +47,14 @@ jobs:
               p1ngo/pythonstocks:${{steps.commit_hash.outputs.sha}}
               p1ngo/pythonstocks:latest
 
-        - name: Update image helm
-          uses: fjogeleit/yaml-update-action@v1
-          with:
-                valueFile: 'Deploy/values.yaml'
-                propertyPath: 'image.tag'
-                value: ${{steps.commit_hash.outputs.sha}}
-                branch: Release
-                targetBranch: main
-                createPR: true
-                message: '[skip ci]Update Docker image tag  to ${{steps.commit_hash.outputs.sha}}'
+        #- name: Update image helm
+         # uses: fjogeleit/yaml-update-action@v1
+         # with:
+           #     valueFile: 'Deploy/values.yaml'
+           #     propertyPath: 'image.tag'
+            #    value: ${{steps.commit_hash.outputs.sha}}
+            #    branch: Release
+            #    targetBranch: main
+             #   createPR: true
+             #   message: '[skip ci]Update Docker image tag  to ${{steps.commit_hash.outputs.sha}}'
            
