@@ -1,0 +1,60 @@
+name: CI 
+
+on:
+    push:
+        branches:
+        - main
+
+jobs:
+    build:
+        if: ${{!contains(github.event.head_commit.message, 'Update Docker image tag to')}}
+        name: 'Build and Push'
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+        
+        - name: Set up Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: '3.9'
+            cache: 'pip' 
+        - run: pip install -r requirements.txt
+          
+        - name: Run tests
+          run: pytest tests/ 
+
+        - name: Get Commit Hash
+          id: commit_hash
+          run: |
+            SHA=$(echo $GITHUB_SHA | head -c7)
+            echo "sha=$SHA" >> $GITHUB_OUTPUT
+        
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+
+        - name: Build and push
+          uses: docker/build-push-action@v6
+          with:
+            context: .
+            push: true
+            tags: |
+              p1ngo/pythonstocks:${{steps.commit_hash.outputs.sha}}
+              p1ngo/pythonstocks:latest
+
+        - name: Update image helm
+          uses: fjogeleit/yaml-update-action@v1
+          with:
+                valueFile: 'Deploy/values.yaml'
+                propertyPath: 'image.tag'
+                value: ${{steps.commit_hash.outputs.sha}}
+                branch: Release
+                targetBranch: main
+                createPR: true
+                message: '[skip ci]Update Docker image tag  to ${{steps.commit_hash.outputs.sha}}'
+           
