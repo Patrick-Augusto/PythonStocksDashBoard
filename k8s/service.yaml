@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: pythonstocks-service
+  labels:
+    app: pythonstocks
+
+spec:
+  selector:
+    app: pythonstocks
+  type: ClusterIP
+  ports:
+  - name: pythonstocks-service
+    protocol: TCP
+    port: 80
+    targetPort: 8080
