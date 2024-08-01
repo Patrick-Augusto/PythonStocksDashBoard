@@ -23,13 +23,13 @@ jobs:
         
         - name: Upgrade pip
           run: pip install --upgrade pip
-
+  
         - name: Install dependencies
           run: pip install -r requirements.txt
             
         - name: Install pytest
           run: pip install pytest
-          
+
         - name: Check pytest version
           run: pytest --version
             
