@@ -21,12 +21,18 @@ jobs:
             python-version: '3.9'
             cache: 'pip' 
         
+        - name: Upgrade pip
+         run: pip install --upgrade pip
+  
         - name: Install dependencies
           run: pip install -r requirements.txt
-      
-        - name: List files (for debugging)
-          run: ls -R
-      
+            
+        - name: Install pytest
+         run: pip install pytest
+  
+        - name: Check pytest version
+          run: pytest --version
+            
         - name: Run tests
           run: pytest tests/ --maxfail=1 --disable-warnings
 
