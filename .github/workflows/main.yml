@@ -28,7 +28,8 @@ jobs:
           run: pip install pytest
           
         - name: Run tests
-          run: pytest tests.py
+          run: pytest --maxfail=1 --disable-warnings
+
 
         - name: Get Commit Hash
           id: commit_hash
