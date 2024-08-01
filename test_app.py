@@ -43,10 +43,26 @@ def test_end_to_end():
     driver.get('http://localhost:8501')
 
     try:
+       
         title_element = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.TAG_NAME, 'h1'))
         )
-        assert title_element is not None
+        assert title_element.text == 'Portifolio e Analises de Ações'
+
+    
+        table_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.TAG_NAME, 'table'))
+        )
+        assert table_element is not None
+
+       
+        header_cells = table_element.find_elements(By.TAG_NAME, 'th')
+        assert len(header_cells) == 2  
+
+        # Verificar a presença de pelo menos uma linha de dados
+        data_rows = table_element.find_elements(By.TAG_NAME, 'tr')
+        assert len(data_rows) > 1  
+
     finally:
         driver.quit()
         process.terminate()
