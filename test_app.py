@@ -1,8 +1,9 @@
-import pandas as pd
 import subprocess
 import time
+import pandas as pd
 import pytest
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -43,16 +44,19 @@ def test_build_main(sidebar_data):
     assert 'MSFT' in result.index, "Result should contain 'MSFT'"
 
 @patch('streamlit.title')
-def test_app_title(mock_title):
-    import streamlit as st
-    st.title('Portifolio e Analises de Ações')
+def test_title(mock_title):
     mock_title.assert_called_once_with('Portifolio e Analises de Ações')
 
 def test_end_to_end():
     process = subprocess.Popen(['streamlit', 'run', 'app.py'])
     time.sleep(5)
 
-    driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    driver = webdriver.Chrome(options=chrome_options)
     driver.get('http://localhost:8501')
 
     try:
